@@ -1,0 +1,221 @@
+---
+title: "Caffeine Intake and Mental Health"
+author: "Katie Macritchie"
+date: "24/05/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# What’s your poison? 
+
+Caffeine has long reigned as the most popular method of enhancing both cognitive and physical performance; indeed, it’s the most widely consumed psychoactive stimulant in the world (Frary et al., 2005). Yet with the rise in what researchers are calling the ‘mental health crisis’ (Moore, 2019), it’s time to investigate the association between caffeine consumption and mental health. 
+
+## Data Origins
+
+**“Caffeine consumption and self-assessed stress, anxiety, and depression in secondary school children”**
+
+[Link to Journal](https://journals.sagepub.com/doi/epub/10.1177/0269881115612404)
+
+*Richards, G., & Smith, A. (2015). Caffeine consumption and self-assessed stress, anxiety, and depression in secondary school children. Journal Of Psychopharmacology, 29(12), 1236-1247. doi: 10.1177/0269881115612404*
+
+
+## Research Questions
+
+**1. Is there an underlying link between caffeine consumption levels and self-reported levels of anxiety, depression and stress?**
+
+**2. Does this report differ between caffeinated drink types?**
+
+## Data Preperation 
+
+```{}
+# Load Packages
+library(rmarkdown) 
+library(tinytex)
+library(ggplot2)
+library(readr)`
+
+`# load Data
+read.csv(~Desktop/Coding_Project/full_set.csv)
+read.csv(~Desktop/Coding_Project/Anxiety.csv)
+read.csv(~Desktop/Coding_Project/dep_ad.csv)
+read.csv(~Desktop/Coding_Project/Strs.csv)
+read.csv(~Desktop/Coding_Project/ed_allcond.csv)
+read.csv(~Desktop/Coding_Project/cola_allcond.csv)
+read.csv(~Desktop/Coding_Project/coffee_allcond.csv)
+read.csv(~Desktop/Coding_Project/tea_allcond.csv)`
+
+`# Tidying the Data, changing name and removing unnecessary variables
+TAC <- read_csv("coding_project/tea_allcond.csv", col_types = cols(`Drink type` = col_skip()))`
+```
+
+```{}
+print(TAC)
+# A tibble: 12 x 4
+   `Caffeine Intake from Tea` `Self-Reported Mental Health Level` `Number of people` Condition 
+   <chr>                      <chr>                                            <dbl> <chr>     
+ 1 Low/ Medum                 Low                                                227 Stress    
+ 2 High                       Low                                                248 Stress    
+ 3 Low/ Medum                 High                                               367 Stress    
+ 4 High                       High                                               457 Stress    
+ 5 Low/ Medum                 Low                                                352 Anxiety   
+ 6 High                       Low                                                394 Anxiety   
+ 7 Low/ Medum                 High                                               239 Anxiety   
+ 8 High                       High                                               310 Anxiety   
+ 9 Low/ Medum                 Low                                                369 Depression
+10 High                       Low                                                460 Depression
+11 Low/ Medum                 High                                               220 Depression
+12 High                       High                                               243 Depression
+```
+
+## Visualisation 1 – The Effect of Caffeine Intake from Energy drinks, Cola, Coffee and Tea on Self-reported levels of Stress, Anxiety and Depression. 
+
+### **Bar Chart**
+```{}
+library(ggplot2)
+ggplot(FULL_SET, aes(x= `Mental Health Level`, y= `Number of people` , color= `Caffeine Intake`, fill = Condition)) +
+    geom_bar(stat = "identity", position = "dodge")+ 
+    facet_grid(. ~ `Drink type`) 
+    
+#color changes the outline of the bar
+#fill changes the colour of the bar - this allows you to see the effect of extra variables, 
+#facet_grid allows you to organise the data into more helpful groups 
+#postion "dodge" means that the bars won't stack on top of eachother, making them easier to interpret.
+    
+BCFS<-ggplot(FULL_SET, aes(x= `Mental Health Level`, y= `Number of people` , color= `Caffeine Intake`, fill = Condition)) +
+  geom_bar(stat = "identity", position = "dodge")+ 
+  facet_grid(. ~ `Drink type`) #change directory name 
+  
+#save output
+ggsave('FULLBAR.jpg')
+```
+
+### **Point Plot**
+```{}
+ggplot(FULL_SET, aes(x= `Mental Health Level`, y= `Number of people`, shape = `Drink type`, color = `Caffeine Intake`))+         geom_point(stat = 'identity', width = 1, position = "dodge")+                                                                  facet_grid(. ~ Condition)
+```
+
+![**Bar chart showing Caffeine intake, from Energy Drinks, Coffee, Cola and Tea, by Anxiety, Depression and Stress level**](remote_access/FULLBAR.jpg)![**Point Plot showing Caffeine intake, from Energy Drinks, Coffee, Cola and Tea, by Anxiety, Depression and Stress level**](remote_access/FullPoint.png) 
+
+## Visualisation 2 – The Effect of Each Drink Type - Energy drink, Cola, Coffee, Tea - by Mental Health Effect
+
+### **Example of Code Used - TEA GRAPH**
+```{}
+TAC<- tea_allcond
+ggplot(TAC , aes(x= `Self-Reported Mental Health Level`, y= `Number of people`, fill= `Caffeine Intake from Tea`)) +
+    geom_bar(stat = "identity", position = "dodge") + 
+    facet_grid(. ~ Condition)
+```
+
+![**Caffeine intake from Tea by Self-reported Anxiety, Depression and Stress level**](remote_access/Tea.png)
+
+
+![**Caffeine intake from Cola by Self-reported Anxiety, Depression and Stress level**](remote_access/Cola.png)
+
+![**Caffeine intake from Coffee by Self-reported Anxiety, Depression and Stress level**](remote_access/Coffee.png)
+
+![**Caffeine intake from Energy Drinks by Self-reported Anxiety, Depression and Stress level**](remote_access/ED.png)
+## Visualisation 3 – The effect of Caffeine Intake on Stress, Anxiety, Depression Independently by Drink Type
+
+### **Example of code used for these visualisations - Stress**
+```{}
+`ggplot(Strs, aes(x= `Self-Reported Stress Level`, y= `Number of people`, fill= `Caffeine Intake`)) +
+    geom_bar(stat = "identity", position = "dodge") + 
+    facet_grid(. ~ `Drink type`)
+```
+![**Caffeine Intake Level and Drink Type by Self-reported Stress level**](remote_access/Stress.png)
+
+![**Caffeine Intake Level and Drink Type by Self-reported Anxiety level**](remote_access/Anxiety.png)
+
+![**Caffeine Intake Level and Drink Type by Self-reported Depression level**](remote_access/Depression.png)
+
+## Visualisation 4 – Average plots: Mental Health, Drink Popularity, Caffeine Consumption
+
+### **DRINK POPULARITY - Green Box Plot**
+```{}
+col="#69b3a2" #change the colour of the box plot filling 
+ggplot(full_set, aes(x= `Drink type`, y = `Number of people`)) + geom_boxplot(fill=col)
+```
+![**Box Plot showing Drink Popularity**](remote_access/DrinkPop.png)
+
+### **DRINK POPULARITY --> Pie Chart**
+```{}
+library(plotrix)
+slices <- c(2675, 4340, 1891, 3886) #creating the variables needed for the data
+lbls <- c("Energy drink", "Cola", "Coffee", "Tea") + pie3D(slices,labels=lbls,explode=0.1, main="Pie Chart of Drink Popularity")
+```
+![**Visual Representation of Drink Popularity**](remote_access/DPplot.png)
+
+### **All Mental Health by occurrence - HORIZONTAL AXIS**
+```{}
+library(dplyr)
+library(forcats)
+ggplot(full_set, aes(x= `Mental Health Level`, y=`Number of people`, fill = Condition)) + 
+    geom_bar(stat = "identity", width=0.8, position = "dodge") +
+    coord_flip()
+```
+
+
+![**Horizontal Mental Health Prevalence**](remote_access/Horiz.png)
+
+
+### **Average Anxiety Level with Yellow Box Plot**
+```{}
+fill <- "gold1"
+line <- "goldenrod2"
+ggplot(Anxiety, aes(x= `Self-Reported Anxiety Level`, y = `Number of people`)) + geom_boxplot(fill = fill, colour = line)
+```
+
+![**Anxiety Prevalence**](remote_access/AnxYel.png)
+
+### **Average Stress Level with White Box Plot**
+```{}
+## Average Stress Level with White Box Plot
+ggplot(Strs, aes(x= `Self-Reported Stress Level`, y = `Number of people`)) + geom_boxplot()
+```
+
+![**Stress Prevalence**](remote_access/WHST.png)
+
+### **Average Depression Level with Blue Box Plot**
+```{}
+fill <- "#4271AE" #adding different colours and lines
+line <- "#1F3552"
+ggplot(dep_ad, aes(x= `Self-Reported Depression Level`, y = `Number of people`)) + geom_boxplot(fill = fill, colour = line)
+
+```
+
+![**Depression Prevalence**](remote_access/BDL.png)
+
+### **Average Caffeine Intake Level with Green Box Plot**
+
+```{}
+slicess<-c(670, 2614, 1371, 723, 369, 697)
+lblss<-c("0 mg/w", "0.1–250 mg/w", "250.1–500 mg/w", "500.1–750 mg/w", "750.1–1000 mg/w", ">1000 mg/w")
+pie3D(slicess,labels= lblss ,explode=0.001, labelcex = 0.75, height = 0.25, main="Pie Chart of Average Weekly Caffeine Intake") #altering the height of the pie chart, the size of the text and the shape to make the chart easier to read
+```
+
+![**Visual Representation of Weekly Caffeine Intake**](remote_access/PCWCI.png)
+
+## Summary
+
+```{}
+*1: Graphing uses only uses data from high school students. The generalisability and reliability of results would be improved by the use of a more representative group of participants. This would include members of different age groups and occupations.*
+*2: No caffeine intake category was excluded as the data provided many outliers.*
+*3: Caffeine intake seemed to have the strongest association with Stress, with higher intake correlating to greater stress levels.*
+*4: Coffee had the weakest effect on mental health levels compared to the other drink types.*
+*5: Cola was the most popular drink choice, and the most popular weekly caffeine consumption 0-250mg.*
+*6: High Stress levels were voted as most common mental health concern, with depression scoring least.* 
+```
+**Future research should focus on analysing a wider data pool, including people of different ages and occupations.**
+
+##References
+
+*Richards, G., & Smith, A. (2015). Caffeine consumption and self-assessed stress, anxiety, and depression in secondary school children. Journal Of Psychopharmacology, 29(12), 1236-1247. doi: 10.1177/0269881115612404*
+
+Frary CD, Johnson RK, Wang MQ (2005) Food sources and intakes of caffeine in the diets of persons in the United States. J Am Diet Assoc 105:110–113 
+
+Moore, S. (2020). We are in the midst of a mental health crisis. The Guardian. Retrieved from https://www.theguardian.com/commentisfree/2019/oct/07/we-are-in-the-midst-of-a-mental-health-crisis-advice-about-jogging-and-self-care-is-not-enough
